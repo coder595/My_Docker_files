@@ -2,27 +2,10 @@
 set -euo pipefail
 
 # =========================
-# CONFIGURATION
+# SYSTEM INFORMATION
 # =========================
 
-EMAIL_TO="admin@example.com"
-EMAIL_FROM="server-health@example.com"
 HOSTNAME="$(hostname)"
-SUBJECT="System Health Report - ${HOSTNAME}"
-
-# =========================
-# DEPENDENCIES CHECK
-# =========================
-
-command -v sendmail >/dev/null 2>&1 || {
-  echo "❌ sendmail not found. Install: apt install -y mailutils"
-  exit 1
-}
-
-# =========================
-# SYSTEM INFO
-# =========================
-
 DATE="$(date)"
 UPTIME="$(uptime -p)"
 LOAD="$(uptime | awk -F'load average:' '{ print $2 }')"
@@ -58,10 +41,10 @@ EOF
 fi
 
 # =========================
-# EMAIL BODY
+# OUTPUT REPORT
 # =========================
 
-EMAIL_BODY=$(cat <<EOF
+cat <<EOF
 System Health Report
 ====================
 
@@ -85,4 +68,3 @@ Disk:
 
 ${DOCKER_INFO}
 EOF
-)
